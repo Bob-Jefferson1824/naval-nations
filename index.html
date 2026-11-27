@@ -59,7 +59,7 @@ const oceanUniforms={uTime:{value:0},uOffset:{value:new THREE.Vector2()},uBoat:{
 const oceanMat=new THREE.ShaderMaterial({uniforms:oceanUniforms,vertexShader:`
 uniform float uTime;uniform vec2 uOffset;varying vec3 vWorld;varying float vHeight;varying vec3 vNormal;
 float wave(vec2 p){float h=0.;h+=sin(dot(p,vec2(.86,.51))*.052+uTime*1.05)*.58;h+=sin(dot(p,vec2(-.42,.91))*.083+uTime*1.43)*.30;h+=sin(dot(p,vec2(.24,-.97))*.14+uTime*1.88)*.16;h+=sin(dot(p,vec2(-.92,-.39))*.23+uTime*2.4)*.07;return h;}
-void main(){vec3 p=position;vec2 w=p.xz+uOffset;p.y=wave(w);float e=.6;float hx=wave(w+vec2(e,0.));float hz=wave(w+vec2(0.,e));vNormal=normalize(vec3(p.y-hx,e,p.y-hz));vec4 wp=modelMatrix*vec4(p,1.);vWorld=wp.xyz;vHeight=p.y;gl_Position=projectionMatrix*viewMatrix*wp;}
+void main(){vec3 p=position;vec2 w=vec2(p.x,-p.y)+uOffset;float h=wave(w);float e=.6;float hx=wave(w+vec2(e,0.));float hz=wave(w+vec2(0.,e));p.z=h;vec3 localNormal=normalize(vec3((h-hx)/e,(h-hz)/e,1.));vNormal=normalize(mat3(modelMatrix)*localNormal);vec4 wp=modelMatrix*vec4(p,1.);vWorld=wp.xyz;vHeight=h;gl_Position=projectionMatrix*viewMatrix*wp;}
 `,fragmentShader:`
 uniform float uTime;uniform vec3 uSun;uniform vec3 uBoat;varying vec3 vWorld;varying float vHeight;varying vec3 vNormal;
 float hash(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+45.32);return fract(p.x*p.y);}
