@@ -88,7 +88,7 @@ function makeSail(g,w,h,x,y,z,phase){const geo=new THREE.PlaneGeometry(w,h,12,10
 const ship=new THREE.Group();scene.add(ship);
 const length=13.8,beam=4.3,deckY=1.35;
 const shape=new THREE.Shape();shape.moveTo(0,-length/2);shape.bezierCurveTo(beam*.42,-length*.34,beam*.56,length*.12,beam*.43,length*.46);shape.lineTo(beam*.30,length*.53);shape.lineTo(-beam*.30,length*.53);shape.lineTo(-beam*.43,length*.46);shape.bezierCurveTo(-beam*.56,length*.12,-beam*.42,-length*.34,0,-length/2);
-const hullGeo=new THREE.ExtrudeGeometry(shape,{depth:2.1,bevelEnabled:true,bevelThickness:.23,bevelSize:.18,bevelSegments:3,curveSegments:16});hullGeo.rotateX(Math.PI/2);hullGeo.translate(0,-.35,0);const hullMesh=new THREE.Mesh(hullGeo,mats.hull);hullMesh.castShadow=true;hullMesh.receiveShadow=true;ship.add(hullMesh);
+const hullGeo=new THREE.ExtrudeGeometry(shape,{depth:2.1,bevelEnabled:true,bevelThickness:.23,bevelSize:.18,bevelSegments:3,curveSegments:16});hullGeo.rotateX(Math.PI/2);hullGeo.translate(0,1.4,0);const hullMesh=new THREE.Mesh(hullGeo,mats.hull);hullMesh.castShadow=true;hullMesh.receiveShadow=true;ship.add(hullMesh);
 addBox(ship,beam*.82,.16,length*.84,mats.deck,0,deckY,0);
 for(const s of [-1,1]){addBox(ship,.19,.48,length*.8,mats.hullDark,s*beam*.43,deckY+.28,.1);for(let z=-5.3;z<5.5;z+=.85){addBox(ship,.12,.52,.13,mats.trim,s*beam*.42,deckY+.28,z)}}
 for(let z=-5.2;z<5.4;z+=.42)addBox(ship,beam*.77,.035,.045,mats.hullDark,0,deckY+.11,z);
@@ -131,11 +131,11 @@ function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDel
   if(keys.KeyW||keys.ArrowUp)throttle=THREE.MathUtils.damp(throttle,1,1.4,dt);else if(keys.KeyS||keys.ArrowDown)throttle=THREE.MathUtils.damp(throttle,-.25,1.5,dt);else throttle=THREE.MathUtils.damp(throttle,0,.35,dt);
   if(keys.KeyQ)trim=THREE.MathUtils.clamp(trim-dt*.38,.05,1);if(keys.KeyE)trim=THREE.MathUtils.clamp(trim+dt*.38,.05,1);
   if(keys.Space){anchored=true;throttle=0}else if(Math.abs(throttle)>.08)anchored=false;
-  const steer=(keys.KeyA||keys.ArrowLeft?1:0)-(keys.KeyD||keys.ArrowRight?1:0);rudder=THREE.MathUtils.damp(rudder,steer,.9,dt);
+  const steer=(keys.KeyA||keys.ArrowLeft?1:0)-(keys.KeyD||keys.ArrowRight?1:0);rudder=THREE.MathUtils.damp(rudder,steer,3.2,dt);
   const relativeWind=Math.abs(Math.sin(windAngle-heading));const sailEfficiency=(.35+relativeWind*.65)*(.55+trim*.65);const targetSpeed=anchored?0:throttle>=0?throttle*(5.2+windSpeed*.23)*sailEfficiency:throttle*2.2;
   speed=THREE.MathUtils.damp(speed,targetSpeed,Math.abs(targetSpeed)>Math.abs(speed)?0.38:0.72,dt);
-  const turnPower=.24+Math.min(Math.abs(speed)/8,1)*.54;heading+=rudder*turnPower*dt*Math.sign(speed||1);
-  ship.position.x+=Math.sin(heading)*speed*dt;ship.position.z-=Math.cos(heading)*speed*dt;
+  const turnPower=.10+Math.min(Math.abs(speed)/5,1)*.72;heading+=rudder*turnPower*dt*Math.sign(speed||1);
+  ship.position.x-=Math.sin(heading)*speed*dt;ship.position.z-=Math.cos(heading)*speed*dt;
   const bob=Math.sin(t*1.65)*.09+Math.sin(t*2.4+.7)*.035;ship.position.y=bob;
   ship.rotation.y=heading;ship.rotation.z=THREE.MathUtils.damp(ship.rotation.z,-rudder*Math.min(Math.abs(speed)/7,1)*.075,2.5,dt);ship.rotation.x=THREE.MathUtils.damp(ship.rotation.x,Math.sin(t*1.2)*.018,1.8,dt);
   wheel.rotation.z=-rudder*.65;
