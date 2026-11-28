@@ -105,8 +105,8 @@ for(let i=0;i<mastDefs.length;i++){const m=mastDefs[i];const mastX=0,mastY=deckY
  // Standing rigging
  for(const side of [-1,1]){ropeBetween(ship,new THREE.Vector3(side*.14,deckY+.2,m.z),new THREE.Vector3(side*2.35,deckY+m.h*.78,m.z),.035);ropeBetween(ship,new THREE.Vector3(side*.14,deckY+.2,m.z),new THREE.Vector3(side*1.6,deckY+m.h*.98,m.z),.025)}
 }
-for(let i=0;i<3;i++){const m=mastDefs[i];for(const side of [-1,1]){ropeBetween(ship,new THREE.Vector3(side*2.2,deckY+m.h*.72,m.z),new THREE.Vector3(0,deckY+m.h*.98,m.z),.018)}}
-for(let i=0;i<2;i++)ropeBetween(ship,mastTops[i],mastTops[i+1],.018);
+for(let i=0;i<mastDefs.length;i++){const m=mastDefs[i];for(const side of [-1,1]){ropeBetween(ship,new THREE.Vector3(side*2.2,deckY+m.h*.72,m.z),new THREE.Vector3(0,deckY+m.h*.98,m.z),.018)}}
+for(let i=0;i<mastTops.length-1;i++)ropeBetween(ship,mastTops[i],mastTops[i+1],.018);
 for(let i=0;i<2;i++){const m=mastDefs[i];const flag=new THREE.Mesh(new THREE.PlaneGeometry(1.4,.78,8,3),new THREE.MeshStandardMaterial({color:i===1?0x9d302c:0xd7c69e,side:THREE.DoubleSide,roughness:1}));flag.position.set(.7,deckY+m.h+.12,m.z);flag.userData.flag=true;flag.userData.phase=i;ship.add(flag)}
 // Deck fittings, rail details, helm, lanterns
 for(let side of [-1,1]){for(let z=-4.5;z<4.6;z+=1.5){cylinder(ship,.1,.1,.16,mats.iron,side*1.15,deckY+.2,z,0,0,8)}}
